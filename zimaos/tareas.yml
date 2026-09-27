@@ -1,0 +1,61 @@
+# ZimaOS → App Store → "+" (arriba a la derecha) → Instalar una app personalizada → Importar.
+# Pega este fichero. Antes cambia APP_PASSWORD por la contraseña que usaréis los dos.
+name: tareas
+services:
+  tareas:
+    image: ghcr.io/cvalera03/tareas:latest
+    container_name: tareas
+    restart: unless-stopped
+    ports:
+      - target: 8080
+        published: "8421"
+        protocol: tcp
+    environment:
+      APP_PASSWORD: cambia-esta-contraseña
+      TZ: Europe/Madrid
+    volumes:
+      - type: bind
+        source: /DATA/AppData/tareas
+        target: /data
+    x-casaos:
+      envs:
+        - container: APP_PASSWORD
+          description:
+            en_us: Shared password for both phones
+            es_es: Contraseña compartida para los dos móviles
+        - container: TZ
+          description:
+            en_us: Time zone
+            es_es: Zona horaria
+      ports:
+        - container: "8080"
+          description:
+            en_us: Web UI
+            es_es: Interfaz web
+      volumes:
+        - container: /data
+          description:
+            en_us: Database and config
+            es_es: Base de datos y configuración
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: tareas
+  author: Carlos
+  developer: Carlos
+  category: Utilities
+  title:
+    en_us: Tareas
+    es_es: Tareas
+  tagline:
+    en_us: Household chores for two
+    es_es: Tareas de casa para dos
+  description:
+    en_us: Today and weekly chores, recurring tasks, who did what and a fair split between Carlos and Zoe.
+    es_es: Qué toca hoy y esta semana, tareas que se repiten, quién hizo qué y reparto justo entre Carlos y Zoe.
+  icon: https://raw.githubusercontent.com/cvalera03/tareas/main/public/icons/icon-512.png
+  index: /
+  port_map: "8421"
+  scheme: http
